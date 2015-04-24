@@ -1,0 +1,27 @@
+Java_JNI example:
+current path: /home/zly/prj/oss/src/
+0. cd  com/company
+1. cd src/java  and compile Main.java
+    cd src/java
+    javac  com/company/Main.java
+2. use javah to generate head file:src/c/com_company_Main.h
+    javah -jni com.company.Main
+    mv com_company_Main.h ../c/
+3. write  src/c/jni_mainImpl.cpp
+4. copy /usr/java/jdk1.7.0_51/include/jni.h  and other head files to src directory:
+   cd  com/company/
+   cp /usr/java/jdk1.7.0_51/include/jni.h  ./
+   cp /usr/java/jdk1.7.0_51/include/linux/*  ./
+5.change
+  #include <jni.h>
+  to
+  #include "../../jni.h"
+  in com_company_Main.h and jni_mainImpl.cpp
+6. generate libHello.so dynamic lib:
+   cd  /com/company/
+  g++ -fPIC -shared -I /usr/java/jdk1.7.0_51/include src/c/jni_mainImpl.cpp -o libHello.so > error.txt
+7. run command:
+     #cd com/company/src/java
+     #java -Djava.library.path=../../ com.company.Main
+     From jni_mainImpl.cpp :Hello world !
+
